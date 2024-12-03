@@ -53,11 +53,17 @@
 
 ```bash
 |-- my_project/
-    |-- app/               # PHP app
-    |-- database/          # SQLite3 資料庫
-    |-- public/            # 前端文件
-        |-- style.css      # 前端樣式
-    |-- scripts/           # 訓練與測試的 Python 腳本
-        |-- train_model.py
-        |-- test_model.py
+    |-- turn_model_train/  # 轉彎模型訓練 
+    |-- light_model_train/ # 車燈模型訓練
+    |-- main/              # 系統主程式
+        |--ccc.py
+    |-- RT_DTV_website     # PHP website
+        |-- app/               # PHP app
+        |-- database/          # SQLite3 資料庫
+        |-- public/            # 前端文件
+            |-- style.css      # 前端樣式
+        |-- scripts/           # 訓練與測試的 Python 腳本
+            |-- train_model.py(要改)
+            |-- test_model.py(要改)
+    |-- light_label_tool   # 車燈標記工具 
     |-- README.md          # 專案說明文件
