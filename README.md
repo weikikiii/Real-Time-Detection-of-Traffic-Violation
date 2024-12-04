@@ -43,8 +43,9 @@
     - filefolder：測試集的資料夾
 
 ## 功能說明
-1. **違規檢測系統**: 輸入車輛資訊，檢測車輛是否有違規行為。
+1. **違規檢測系統**: 輸入車輛影片，檢測該影片中車輛是否有違規行為。
 2. **結果輸出**: 系統將輸出車輛違規結果及相關數據。
+3. **網站**: 提供執行程式的網頁，包含手動執行以及自動執行
 
 ## 模型架構
 ![image](https://github.com/candycca/CCU-Headlight-violation-detection-system/blob/main/docs/%E7%B3%BB%E7%B5%B1%E6%9E%B6%E6%A7%8B%E5%9C%96.png)
@@ -62,10 +63,13 @@
         |-- database/          # SQLite3 資料庫
         |-- public/            # 前端文件
             |-- style.css      # 前端樣式
-        |-- scripts/           # 訓練與測試的 Python 腳本
-            |-- train_model.py(要改)
-            |-- test_model.py(要改)
+            |-- python/           # 訓練與測試的 Python 腳本
+              |-- train_model.py(要改)
+              |-- test_model.py(要改)
     |-- light_label_tool   # 車燈標記工具 
     |-- README.md          # 專案說明文件
 ```
 ## 輸出格式(foldername_result)(編輯中
+
+
+## 網頁操作規則(編輯中
