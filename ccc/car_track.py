@@ -9,34 +9,22 @@ from turn import turn_predict
 from light import light_predict
 from turn_model import *
 
-model = YOLO('.\weight\yolov8n.pt')
+model = YOLO('./weight/yolov8n.pt')
 model.to('cuda')
 
 turn_model = ResNet(ResidualBlock, [3,4,6,3])
-turn_model.load_state_dict(torch.load(".\weight\weight.pth", map_location='cuda:0'))
+turn_model.load_state_dict(torch.load("./weight/weight.pth", map_location='cuda:0'))
 turn_model = turn_model.to('cuda')
 
 
-light_model = YOLO('.\weight\\best.pt')
+light_model = YOLO('./weight/best.pt')
 light_model = light_model.to('cuda')
 
 
-
-# input:
-#1.input_folder_path:存放你想預測的影片的資料夾路徑，裡面不能有子資料夾！
-#2.car_img_folder_path:存放車輛序列照片的資料夾之path
-#3.box_info_folder_path:存放bounding_box資料的資料夾
-# output:
-#1.各video的{yolo預測結果}會以(video_name)_ouput.mp4存在code2資料夾下，我本來想把他們用程式統一到某個資料夾，但失敗，所以我現在把所有的output_video放在code2/video_output底下
-#2.{每部影片每個id出現的幀數及其在該幀數的bounding box之中心座標以及box長寬}以txt檔存在box_info_folder_path下
-#3.{每部影片所有車輛序列照片}存在car_img_folder_path資料夾底下，例如你要找v25中id為215的車的照片，可以在{car_img_folder_path}/v25/car215中找到
-
-# img_list = Yolo_Car_Predict(car_model, filename, video_path, info_folder, output_folder, cut_with_outside)
-
-def car_track(video_path, output_folder):
+def car_track(video_path, output_folder, save):
 
     ##################################
-    filename = video_path.split('\\')[-1][:-4]
+    filename = video_path.split('/')[-1][:-4]
     print(filename)
     car_info = defaultdict(dict)
     buffer = []
@@ -70,10 +58,9 @@ def car_track(video_path, output_folder):
     #output_video的width, height, fps設定
     width, height, fps = (int(cap.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
     
-    output_video_path = output_folder + "/video_output/" + filename + "_output.webm"
-    
-    
-    video_writer = cv2.VideoWriter(output_video_path, cv2.VideoWriter_fourcc(*'VP80'), fps, (width, height))
+    if save[0]:
+        output_video_path = output_folder + "/video_output/" + filename + "_output.webm"
+        video_writer = cv2.VideoWriter(output_video_path, cv2.VideoWriter_fourcc(*'VP80'), fps, (width, height))
 
 
     while True:
@@ -89,11 +76,12 @@ def car_track(video_path, output_folder):
                 
                 boxes = results[0].boxes.xywh.cpu()
                 track_ids = results[0].boxes.id.int().cpu().tolist()
-
-                #將預測結果寫入影片（就是那些框框）
-                annotated_frame = results[0].plot()
-                cv2.putText(annotated_frame, str(frame_num), (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255))
-                video_writer.write(annotated_frame)
+                
+                if save[0]:
+                    #將預測結果寫入影片（就是那些框框）
+                    annotated_frame = results[0].plot()
+                    cv2.putText(annotated_frame, str(frame_num), (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255))
+                    video_writer.write(annotated_frame)
 
                 #紀錄目前的車輛
                 current_cars = set(track_ids)
@@ -142,10 +130,10 @@ def car_track(video_path, output_folder):
             #執行轉彎判斷及違規判斷
             print("執行轉彎判斷的車輛:", buffer[-buffer_size:])
             turn_info = {key: car_info[key] for key in buffer[-buffer_size:]}
-            turn_cars = turn_predict(turn_model, turn_info)
+            turn_cars = turn_predict(turn_model, turn_info, output_folder, filename, save)
             print("轉彎的車輛", turn_cars)
             light_info = {key: car_info[key] for key in turn_cars}
-            light_cars = light_predict(light_model, light_info, output_folder, filename)
+            light_cars = light_predict(light_model, light_info, output_folder, filename, save)
             print("有打方向燈的車輛:", light_cars)
             print("")
             # 移除buffer
@@ -155,18 +143,19 @@ def car_track(video_path, output_folder):
             break
         elif len(buffer) < buffer_size and video_finished == 1:
             print("執行檢測的車輛:", buffer)
-            info = {key: car_info[key] for key in buffer}
-            turn_cars = turn_predict(turn_model, turn_info)
+            turn_info = {key: car_info[key] for key in buffer}
+            turn_cars = turn_predict(turn_model, turn_info, output_folder, filename, save)
             print("轉彎的車輛", turn_cars)
             light_info = {key: car_info[key] for key in turn_cars}
-            light_cars = light_predict(light_model, light_info, output_folder, filename)
+            light_cars = light_predict(light_model, light_info, output_folder, filename, save)
             print("有打方向燈的車輛:", light_cars)
             buffer.clear()
             break
 
     model.predictor.trackers[0].reset()
     cap.release()
-    video_writer.release()
+    if save[0]:
+        video_writer.release()
     cv2.destroyAllWindows()
     print(list(car_info.keys()))
     print(len(car_info))        

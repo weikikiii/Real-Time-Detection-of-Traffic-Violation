@@ -10,11 +10,23 @@ import csv
 import torch
 import shutil
 from screenshot import make_violation_image
+#存波型圖
+def save_wave_img(light_box_num_list, id,  output_folder, filename, save):
+    if save:
+        light_info_folder_path = os.path.join(output_folder , 'light_info', filename)
+        if not os.path.exists(light_info_folder_path):
+            os.makedirs(light_info_folder_path)
+        wave_img_path = os.path.join(light_info_folder_path, f"wave_{id}.jpg")
+        plt.plot(light_box_num_list)
+        plt.title(f"light Information")
+        plt.xlabel('Index')
+        plt.ylabel('light')
+        plt.savefig(wave_img_path)
+        plt.cla()  
 
 
 
-
-def light_predict(model, light_info, output_folder, filename, save = 1):
+def light_predict(model, light_info, output_folder, filename, save):
     result_path = os.path.join(output_folder, 'result', filename)
     light_info_folder = os.path.join(output_folder, 'light_info')
     carimg_folder = os.path.join(output_folder, 'carimg')
@@ -44,16 +56,8 @@ def light_predict(model, light_info, output_folder, filename, save = 1):
             license_plate = 'ccc-0001'
             make_violation_image(violation_imgs, violation_bboxes, id, license_plate, result_path)
             result.append(id)
+        save_wave_img(light_box_num_list, id,  output_folder, filename, save[3])
     #print(carID, light)
-    #畫波型圖
-    if save:
-        plt.plot(light_box_num_list)
-        plt.title(f"light Information")
-        plt.xlabel('Index')
-        plt.ylabel('light')
-
-        # plt.savefig(output_path)
-        plt.cla()  
     return result  
 
 #判斷打燈(0:沒有打燈 1:有打燈)
