@@ -4,16 +4,16 @@ import torch
 from tqdm import tqdm
 from turn_model import make_test_dataloader
 #存car_img
-def save_carimg(track_info, id, output_folder, filename, save):
+def save_carimg(frame_info, id, output_folder, filename, save):
     if save:
-        for id, frame_info in track_info.items():
-            for frame, info in frame_info.items():
-                img = info['car_imgs']
-                carimg_folder_path = os.path.join(output_folder , 'car_imgs', filename)
-                if not os.path.exists(carimg_folder_path):
-                    os.makedirs(carimg_folder_path)
-                carimg_path = os.path.join(carimg_folder_path, f"car{id}_{frame}.jpg")
-                cv.imwrite(carimg_path, img)
+        for frame, info in frame_info.items():
+            img = info["car_imgs"]
+            carimg_folder_path = os.path.join(output_folder , 'carimg', filename)
+            if not os.path.exists(carimg_folder_path):
+                os.makedirs(carimg_folder_path)
+            #格式：./"args.name"_output/turn_info/"filename"/car4_32.jpg
+            carimg_path = os.path.join(carimg_folder_path, f"car{id}_{frame}.jpg")
+            cv.imwrite(carimg_path, img)
             
 #存turn_info的軌跡圖片
 def save_trackimg(img, output_folder, filename, save):
@@ -65,9 +65,14 @@ def draw(track_info, output_folder, filename, save):
                 cv.polylines(img, [points], isClosed=False, color=(255, 255, 255), thickness=1)
                 cv.circle(img, (points[0][0][0], points[0][0][1]), 1, (255,0,0))
                 cv.circle(img, (points[-1][0][0], points[-1][0][1]), 1, (0,255,0))
-                save_trackimg(img, output_folder, filename, save[2])
                 car_id.append(id)
                 imgs.append(img)
+                #存turn_info的軌跡圖片
+                save_trackimg(img, output_folder, filename, save[2])
+                #存car_img
+                save_carimg(frame_info, id, output_folder, filename, save[1])
+                
+                
         else:
             continue 
     return car_id, imgs
@@ -89,7 +94,6 @@ def turn_predict(model, track_info, output_folder, filename, save):
     for turn, id in zip(results, car_id):           
         if turn == 'left' or turn == 'right':
             turn_car.append(id)
-        save_carimg(track_info, id, output_folder, filename, save[1]) #存carimg(直走右轉左轉都有存)
     save_turn_info(results, car_id, output_folder, filename, save[2]) #存turn_info的車輛轉彎方向csv檔(記錄車輛是直走、右轉還是左轉） 
     return turn_car
 
