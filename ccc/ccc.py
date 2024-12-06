@@ -8,7 +8,7 @@ from car_track import car_track
 def parse_save(value):
     try:
         numbers = [int(x) for x in value.split(",")]
-        # 檢查列表長度是否為 4
+        # 檢查長度是否為 4
         if len(numbers) != 4:
             raise ValueError("The list must contain exactly 4 numbers.")
         # 檢查每個數字是否在 [0, 1] 範圍內
@@ -43,12 +43,13 @@ start_time = time.time()
 input_folder = "./" + args.name
 
 #output_folder
-output_folder = "./" + args.name + "_result"
-video_output_folder = output_folder + '/video_output' #存yolo標記過的影片
-turn_info_folder = output_folder + '/turn_info' #存軌跡圖、車輛轉彎方向csv檔案（記錄車輛是直走、右轉還是左轉） 
-light_info_folder = output_folder + '/light_info' #存亮暗波型圖
-carimg_folder = output_folder + '/carimg' #存224*224的車輛圖片
-result_folder = output_folder + '/result' #存違規車的圖片
+output_folder = "./" + args.name + "_result" #存所有結果的資料夾
+video_output_folder = os.path.join(output_folder , "video_output")#存yolo輸出的影片
+turn_info_folder = os.path.join(output_folder , "turn_info")#存車輛軌跡(img)＋轉彎模型預測的結果(csv檔)
+light_info_folder = os.path.join(output_folder , "light_info")#存wave圖
+carimg_folder = os.path.join(output_folder,  "carimg")#存carimg
+result_folder = os.path.join(output_folder , "result")#存違規照片
+
 
 
 dataset = []
