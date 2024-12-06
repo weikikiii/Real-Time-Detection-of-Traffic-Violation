@@ -59,7 +59,7 @@ def car_track(video_path, output_folder, save):
     width, height, fps = (int(cap.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
     
     if save[0]:
-        output_video_path = output_folder + "/video_output/" + filename + "_output.webm"
+        output_video_path = os.path.join(output_folder ,"video_output" ,f"{filename}_output.webm")
         video_writer = cv2.VideoWriter(output_video_path, cv2.VideoWriter_fourcc(*'VP80'), fps, (width, height))
 
 
