@@ -60,16 +60,29 @@
       ```
    - 系統主程式
       ```bash
-       python ccc.py --name filefolder
+      cd [ccc.py所在的資料夾]
+      python ccc.py --name filefolder
       ```
-    - filefolder：測試集的資料夾
+      filefolder：測試集的資料夾
 
 ## 功能說明
 1. **違規檢測系統**: 輸入車輛資訊，檢測車輛是否有違規行為。
-2. **結果輸出**: 系統將輸出車輛違規結果及相關數據。
+2. **輸入**:
+   - 
+3. **輸出**:
+   - 車輛違規照片
+   - YOLO輸出的影片(optional)
+   - 224*224的車輛序列圖
+   - 車輛的軌跡圖(optional)
+   - 轉彎模型預測結果(csv檔)(optional)
+   - 車燈亮暗波型圖(optional)
 
 ## 模型架構
-![image](https://github.com/candycca/CCU-Headlight-violation-detection-system/blob/main/docs/%E7%B3%BB%E7%B5%B1%E6%9E%B6%E6%A7%8B%E5%9C%96.png)
+![image](https://github.com/candycca/CCU-Headlight-violation-detection-system/blob/main/docs/%E7%B3%BB%E7%B5%B1%E6%9E%B6%E6%A7%8B%E5%9C%96.png
+
+## 系統流程
+
+
 
 ## 文件結構(編輯中
 
