@@ -40,7 +40,7 @@
 1. 執行訓練指令：
     - 轉彎模型
       ```bash
-      python ResNet_train/test.py
+      python ResNet_train/train.py
       ```
     - 車燈辨識模型
       ```bash
@@ -50,9 +50,18 @@
 
 ### 測試模型
 1. 執行測試指令：
-    ```bash
-     python ccc.py --name filefolder
-    ```
+   - 轉彎模型
+      ```bash
+      python ResNet_train/test.py
+      ```
+   - 車燈辨識模型
+      ```bash
+      python CNNLSTM_train/test.py
+      ```
+   - 系統主程式
+      ```bash
+       python ccc.py --name filefolder
+      ```
     - filefolder：測試集的資料夾
 
 ## 功能說明
