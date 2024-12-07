@@ -15,11 +15,24 @@
 ## 前置準備
 
 1. **安裝所需套件:**
-    - python 3.8
-    - numpy
-    - opencv
-    - torch
-    - ultralytics
+   
+    - python == 3.8
+    - pandas == 2.0.3
+    - numpy == 1.24.3
+    - opencv-python == 4.10.0.84
+    - torch == 2.4.0+cu118  
+    - torchvision == 0.19.0+cu118
+    - torchaudio == 2.4.0+cu118
+    - ultralytics == 8.3.21
+    - pillow == 10.4.0 
+    - scipy == 1.10.1
+    - matplotlib == 3.7.5
+    - seaborn == 0.13.2
+    - filelock == 3.13.1
+    - requests == 2.32.3
+    - tqdm == 4.66.5
+    - pyyaml == 6.0.2
+    - typing_extensions == 4.11.0
 
 ## 訓練與測試(編輯中
 
