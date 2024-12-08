@@ -66,8 +66,15 @@
       filefolder：測試集的資料夾
 
 ## 功能說明
-1. **違規檢測系統**: 輸入車輛資訊，檢測車輛是否有違規行為。
-2. **輸入**:
+1. **轉彎模型:判斷車輛是否有轉彎**
+   - 輸入：224*224的車輛軌跡圖
+   - 輸出：車輛的狀態(left/right/straight)
+2. **車燈辨識模型:判斷車輛的方向燈是否有閃爍**
+   - 輸入：車輛序列圖
+   - 輸出：車燈的狀態(閃爍/無閃爍)
+3. **系統主程式**
+   - 輸入：
+   - 輸出：違規車輛的照片
 
 
 ## 模型架構
@@ -81,10 +88,10 @@
 ![image](https://github.com/candycca/Real-Time-Detection-of-Traffic-Violation/blob/ccc/docs/車輛偵測.png)
 3. **轉彎判斷**:
 ![image](https://github.com/candycca/Real-Time-Detection-of-Traffic-Violation/blob/ccc/docs/轉彎判斷.png)
-4. **違規判斷**:
+4. **車燈辨識**:
 ![image](https://github.com/candycca/Real-Time-Detection-of-Traffic-Violation/blob/ccc/docs/違規判斷.png)
 
-## 網頁操作？？
+## 網頁？？
 
 ## 文件結構(編輯中
 
