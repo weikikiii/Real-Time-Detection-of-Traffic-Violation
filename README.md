@@ -62,27 +62,21 @@
       ```
    - 系統主程式
       ```bash
-      cd [ccc.py所在的資料夾]
       python ccc.py --name filefolder
       ```
-      filefolder：測試集的資料夾
+      filefolder：測試影片的資料夾
 
 
 ## 功能說明
-1. **轉彎模型：判斷車輛是否有轉彎。**
-   - 輸入：224*224的車輛軌跡圖
-   - 輸出：車輛的狀態(left/right/straight)
-     
-2. **車燈辨識模型：判斷車輛的方向燈是否有閃爍。**
-   - 輸入：車輛序列圖
-   - 輸出：車燈的狀態(閃爍/無閃爍)
-     
-3. **系統主程式：輸入車輛影片，檢測該影片中車輛是否有違規行為。**
-   - 輸入：車輛影片？
+1. **系統主程式：輸入車輛影片，檢測該影片中車輛是否有違規行為。**
+   - 輸入：車輛影片資料
    - 輸出：違規車輛的照片以及相關資訊
   
-4. **網頁：提供執行程式的網頁，包含手動執行以及自動執行。**
-
+2. **網頁：提供執行程式的網頁，包含手動執行以及自動執行。**
+   - 登入：
+   - 及時偵測系統：
+   - 上傳影片:
+   - 察看結果:
 
 ## 模型架構
 ![image](https://github.com/candycca/CCU-Headlight-violation-detection-system/blob/main/docs/%E7%B3%BB%E7%B5%B1%E6%9E%B6%E6%A7%8B%E5%9C%96.png)
@@ -91,12 +85,6 @@
 ## 系統流程
 1. **系統流程**:
 ![image](https://github.com/candycca/Real-Time-Detection-of-Traffic-Violation/blob/ccc/docs/系統架構.png)
-2. **車輛偵測**:
-![image](https://github.com/candycca/Real-Time-Detection-of-Traffic-Violation/blob/ccc/docs/車輛偵測.png)
-3. **轉彎判斷**:
-![image](https://github.com/candycca/Real-Time-Detection-of-Traffic-Violation/blob/ccc/docs/轉彎判斷.png)
-4. **車燈辨識**:
-![image](https://github.com/candycca/Real-Time-Detection-of-Traffic-Violation/blob/ccc/docs/違規判斷.png)
 
 
 ## 車燈標記工具
@@ -122,7 +110,6 @@
             |-- test_model.py(要改)
     |-- light_label_tool   # 車燈標記工具 
     |-- README.md          # 專案說明文件
+    |-- output
 ```
 
-
-## 輸出格式(foldername_result)(編輯中
