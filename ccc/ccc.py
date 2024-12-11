@@ -39,13 +39,13 @@ parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument(
     '--name', 
     type=str, 
-    default="demo_video", 
+    default="", 
     help="Name of the folder containing the video files"
 )
 parser.add_argument(
     '--save', 
     type=parse_save, 
-    default="1,1,1,1", 
+    default="0,0,0,0", 
     help="A comma-separated list of 4 integers to specify saving options:\n - The 1st number: Save YOLO output video (1: yes, 0: no)\n- The 2nd number: Save vehicle images (1: yes, 0: no)\n- The 3rd number: Save vehicle trajectories(image) and turn model predictions(csv file) (1: yes, 0: no)\n- The 4th number: Save wave graphs (1: yes, 0: no)\nExample: --save 1,0,1,0"
 )
 
