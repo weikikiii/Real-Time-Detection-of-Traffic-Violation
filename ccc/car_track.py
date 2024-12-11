@@ -9,23 +9,25 @@ from turn import turn_predict
 from light import light_predict
 from turn_model import *
 
-model = YOLO('./weight/yolov8n.pt')
+current_dir = os.path.dirname((os.path.abspath(__file__)))
+weight = os.path.join(current_dir, "weight")
+
+model = YOLO(os.path.join(weight, "yolov8n.pt"))
 model.to('cuda')
 
 turn_model = ResNet(ResidualBlock, [3,4,6,3])
-turn_model.load_state_dict(torch.load("./weight/weight.pth", map_location='cuda:0'))
+turn_model.load_state_dict(torch.load(os.path.join(weight, "weight.pth"), map_location='cuda:0'))
 turn_model = turn_model.to('cuda')
 
 
-light_model = YOLO('./weight/best.pt')
+light_model = YOLO(os.path.join(weight, "best.pt"))
 light_model = light_model.to('cuda')
 
 
 def car_track(video_path, output_folder, save):
 
     ##################################
-    filename = video_path.split('/')[-1][:-4]
-    print(filename)
+    filename = os.path.basename(video_path)[:-4]
     car_info = defaultdict(dict)
     buffer = []
     #目前檢測到的未離開畫面的車輛
@@ -59,7 +61,7 @@ def car_track(video_path, output_folder, save):
     width, height, fps = (int(cap.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
     
     if save[0]:
-        output_video_path = os.path.join(output_folder ,"video_output" ,f"{filename}_output.webm")
+        output_video_path = os.path.join(output_folder ,f"{filename}_output.webm")
         video_writer = cv2.VideoWriter(output_video_path, cv2.VideoWriter_fourcc(*'VP80'), fps, (width, height))
 
 
@@ -134,8 +136,10 @@ def car_track(video_path, output_folder, save):
             print("轉彎的車輛", turn_cars)
             light_info = {key: car_info[key] for key in turn_cars}
             light_cars = light_predict(light_model, light_info, output_folder, filename, save)
-            print("有打方向燈的車輛:", light_cars)
+            print("沒打方向燈的車輛:", light_cars)
             print("")
+            for key in buffer[-buffer_size:]:
+                del car_info[key]
             # 移除buffer
             del buffer[-buffer_size:]
 
@@ -149,6 +153,8 @@ def car_track(video_path, output_folder, save):
             light_info = {key: car_info[key] for key in turn_cars}
             light_cars = light_predict(light_model, light_info, output_folder, filename, save)
             print("有打方向燈的車輛:", light_cars)
+            for key in buffer:
+                del car_info[key]
             buffer.clear()
             break
 

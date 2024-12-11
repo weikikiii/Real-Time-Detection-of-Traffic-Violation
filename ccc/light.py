@@ -11,11 +11,9 @@ import torch
 import shutil
 from screenshot import make_violation_image
 #存波型圖
-def save_wave_img(light_box_num_list, id,  output_folder, filename, save):
+def save_wave_img(light_box_num_list, id,  output_folder, save):
     if save:
-        light_info_folder_path = os.path.join(output_folder , 'light_info', filename)
-        if not os.path.exists(light_info_folder_path):
-            os.makedirs(light_info_folder_path)
+        light_info_folder_path = os.path.join(output_folder , 'light_info')
         wave_img_path = os.path.join(light_info_folder_path, f"wave_{id}.jpg")
         plt.plot(light_box_num_list)
         plt.title(f"light Information")
@@ -24,41 +22,48 @@ def save_wave_img(light_box_num_list, id,  output_folder, filename, save):
         plt.savefig(wave_img_path)
         plt.cla()  
 
-
+def save_light_info(is_light, car_id, output_folder, filename, save):
+    if save:
+        light_info_folder_path = os.path.join(output_folder , 'light_info')
+        csv_path = os.path.join(light_info_folder_path, "light_predict.csv")
+        with open(csv_path, mode='a', newline='') as csvfile:
+            df = csv.writer(csvfile)
+            if os.stat(csv_path).st_size == 0:  # 檢查檔案是否為空
+                df.writerow(['video_name', 'car_id', 'predict_light'])
+            df.writerow([filename, car_id, is_light])
 
 def light_predict(model, light_info, output_folder, filename, save):
-    result_path = os.path.join(output_folder, 'result', filename)
-    light_info_folder = os.path.join(output_folder, 'light_info')
-    carimg_folder = os.path.join(output_folder, 'carimg')
+    violation_path = os.path.join(output_folder, 'violation')
     result = []
-
-    for id, frame_info in light_info.items():
-        violation_imgs = []
-        violation_bboxes = []
-        light_box_num_list = []
-        frame_num = len(frame_info)
-        count = 0
-        for _, info in frame_info.items():
-            car_img = info['car_imgs']
-            if count == int(0.4 * frame_num) or count == int(0.6 * frame_num) or count == int(0.8 * frame_num):
-                violation_imgs.append(info['ori_imgs'])
-                violation_bboxes.append(info['bboxes'])
-            count = count + 1
-            pred = model.predict(car_img, save=False,verbose=False)
-            if len(pred[0].boxes) == 0:
-                light_box_num_list.append(len(pred[0].boxes))
-            else:
-                light_box_num_list.append(1)
-        light = is_light(light_box_num_list)
-        if light[0] == 1:
-            if not os.path.exists(result_path):
-                os.makedirs(result_path)
-            license_plate = 'ccc-0001'
-            make_violation_image(violation_imgs, violation_bboxes, id, license_plate, result_path)
-            result.append(id)
-        save_wave_img(light_box_num_list, id,  output_folder, filename, save[3])
-    #print(carID, light)
-    return result  
+    if not light_info:
+        return result
+    
+    else:
+        for id, frame_info in light_info.items():
+            violation_imgs = []
+            violation_bboxes = []
+            light_box_num_list = []
+            frame_num = len(frame_info)
+            count = 0
+            for _, info in frame_info.items():
+                car_img = info['car_imgs']
+                if count == int(0.4 * frame_num) or count == int(0.6 * frame_num) or count == int(0.8 * frame_num):
+                    violation_imgs.append(info['ori_imgs'])
+                    violation_bboxes.append(info['bboxes'])
+                count = count + 1
+                pred = model.predict(car_img, save=False,verbose=False)
+                if len(pred[0].boxes) == 0:
+                    light_box_num_list.append(len(pred[0].boxes))
+                else:
+                    light_box_num_list.append(1)
+            light = is_light(light_box_num_list)
+            save_light_info(light[0], id, output_folder, filename, save[3])
+            if light[0] == 0:
+                license_plate = 'ccc-0001'
+                make_violation_image(violation_imgs, violation_bboxes, id, license_plate, violation_path)
+                result.append(id)
+            save_wave_img(light_box_num_list, id,  output_folder, save[3])
+        return result  
 
 #判斷打燈(0:沒有打燈 1:有打燈)
 def is_light(num_list):
