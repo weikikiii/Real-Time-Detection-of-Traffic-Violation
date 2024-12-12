@@ -30,7 +30,8 @@
     <script>
 
         //  初始化 WebSocket 連線
-        socket = new WebSocket("ws://100.78.179.98:6789");
+        ip = "";
+        socket = new WebSocket("ws://" + ip);
 
         socket.onopen = () => {
             console.log("WebSocket 已連線");
