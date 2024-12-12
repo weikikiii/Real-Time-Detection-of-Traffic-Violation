@@ -23,4 +23,4 @@ $routes->get('RunController', 'RunController::index', ['filter' => ['auth']]);
 $routes->get('FindController', 'FindController::index', ['filter' => ['auth']]);
 $routes->get('MonitorController', 'MonitorController::index', ['filter' => ['auth']]);
 
-$routes->post('save_violation_car', 'MonitorController::save_violation_car');
+$routes->post('get_violation_car_data', 'MonitorController::get_violation_car_data');

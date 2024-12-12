@@ -15,7 +15,7 @@ class CheckController extends BaseController
         session();
         return view('checks/index');
     }
-    public function list()
+    public function folder_to_database()
     {
 
         $VideoModel = new VideoModel();
@@ -84,7 +84,8 @@ class CheckController extends BaseController
 
     }
 
-    public function delete_video(){
+    public function delete_video()
+    {
         $VideoModel = new VideoModel();
         $VideoModel->where('videoname', '');
     }
@@ -97,5 +98,12 @@ class CheckController extends BaseController
         
         print_r($userModel->findAll());
 
+    }
+
+    public function delete_violation_car()
+    {
+        $violatingCarModel = new ViolatingCarModel();
+        print_r($violatingCarModel->findAll());
+        $violatingCarModel->where('img_path !=', '')->delete();
     }
 }

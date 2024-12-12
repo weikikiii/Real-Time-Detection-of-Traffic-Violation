@@ -38,7 +38,7 @@ light_model = light_model.to('cuda')
 
 # img_list = Yolo_Car_Predict(car_model, filename, video_path, info_folder, output_folder, cut_with_outside)
 
-async def car_track(video_path, output_folder, websocket = None):
+async def car_track(video_path, output_folder, websocket = None, auto = 1):
 
 
 
@@ -158,12 +158,13 @@ async def car_track(video_path, output_folder, websocket = None):
                         "event": "violation_car",
                         "car_id": light_cars,
                         "video_name": filename,
-                        "video_path": video_path  
+                        "video_path": video_path,
+                        "auto": auto  
                     }
                     # 傳送訊息給前端網頁(實時偵測系統)
                     await websocket.send(json.dumps(event_data))
-                    # 傳送訊息給PHP後端(save_violation_car)
-                    response = requests.post("http://100.78.179.98:8080/save_violation_car", json = event_data)
+                    # 傳送訊息給PHP後端(get_violation_car_data)
+                    response = requests.post("http://100.78.179.98:8080/get_violation_car_data", json = event_data)
                 print("沒有打方向燈的車輛:", light_cars)
             else:
                 print("沒有打方向燈的車輛: none")
@@ -187,17 +188,18 @@ async def car_track(video_path, output_folder, websocket = None):
                         "event": "violation_car",
                         "car_id": light_cars,
                         "video_name": filename,
-                        "video_path": video_path    
+                        "video_path": video_path,
+                        "auto": auto    
                     }
                     # 傳送訊息給前端網頁(實時偵測系統)
                     await websocket.send(json.dumps(event_data))
-                    # 傳送訊息給PHP後端(save_violation_car)
-                    response = requests.post("http://100.78.179.98:8080/save_violation_car", json = event_data)
-                    if response.status_code == 200:
-                            print("資料已成功寫入資料庫")
-                            print(response.text)
-                    else:
-                        print(f"寫入失敗: {response.text}")
+                    # 傳送訊息給PHP後端(get_violation_car_data)
+                    response = requests.post("http://100.78.179.98:8080/get_violation_car_data", json = event_data)
+                    # if response.status_code == 200:
+                    #         print("資料已成功寫入資料庫")
+                    #         print(response.text)
+                    # else:
+                    #     print(f"寫入失敗: {response.text}")
                 print("沒有打方向燈的車輛:", light_cars)
             else:
                 print("沒有打方向燈的車輛: none")

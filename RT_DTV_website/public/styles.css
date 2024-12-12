@@ -10959,3 +10959,10 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
   background-color: #86b7fe; 
   color: #000; 
 }
+
+/* check部分 */
+.check-container {
+  display: grid;
+  text-align:center;
+  justify-content: center; /* 垂直居中 */
+}

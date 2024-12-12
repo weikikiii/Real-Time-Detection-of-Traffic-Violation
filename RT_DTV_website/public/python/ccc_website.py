@@ -7,9 +7,10 @@ import websockets
 import json
 from car_track_website import car_track
 
-#這個檔案是網頁用，目前先固定輸入檔案
+# 這個檔案是網頁用
 WEBSOCKET_PORT = 6789
 base_path = os.getcwd()  # 獲取當前工作目錄
+auto = -1                # 自動偵測或手動執行
 
 async def ccc_website(websocket):    
     while True:
@@ -19,7 +20,7 @@ async def ccc_website(websocket):
         message = await websocket.recv()
         data = json.loads(message)
         print(data)
-        if data["action"] != "start":
+        if (data["action"] != "start") and (data["action"] != "start_auto"):
             print("收到無效的啟動訊號")
             continue
 
@@ -27,7 +28,12 @@ async def ccc_website(websocket):
 
         #處理收到的啟動訊號
         split_data = data["path"].split('/')
-        input_folder = os.path.join(base_path, split_data[-3], split_data[-2])
+        if data["action"] == "start":
+            input_folder = os.path.join(base_path, split_data[-2])
+            auto = 0
+        else:
+            input_folder = os.path.join(base_path, split_data[-3], split_data[-2])
+            auto = 1
         video_path = os.path.join(base_path, split_data[-3], split_data[-2], split_data[-1])
         filename = split_data[-1]
         print(input_folder, video_path)
@@ -69,8 +75,7 @@ async def ccc_website(websocket):
         if filename.endswith(".mp4"):
             #合成video_path
             video_path = os.path.join(input_folder, filename)
-
-            await car_track(video_path, output_folder, websocket)
+            await car_track(video_path, output_folder, websocket, auto)
 
 
         end_time = time.time()

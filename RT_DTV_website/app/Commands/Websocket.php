@@ -13,7 +13,8 @@ class Websocket extends BaseCommand
 
     public function run(array $params)
     {
-        $command = 'C:/Users/96285/anaconda3/envs/ml/python.exe ' . FCPATH . 'python/ccc_website.py';  // 指向 Python 腳本
+        $python_path = 'C:/Users/96285/anaconda3/envs/ml/python.exe'; // 這邊填入PYTHON環境執行黨
+        $command =  $python_path . FCPATH . 'python/ccc_website.py';  // 指向 Python 腳本
         $output = shell_exec($command);
 
         CLI::write("WebSocket 伺服器啟動: " . $output, 'green');

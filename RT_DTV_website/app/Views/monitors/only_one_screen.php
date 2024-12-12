@@ -40,7 +40,7 @@
         // console.log(videos);
         // console.log(video_element);
         // console.log(lengths);
-
+        
         function initial_video(road)
         {
             if(road === "")
@@ -109,7 +109,7 @@
                 console.log("影片開始播放，向後端發送啟動訊號");
                 const video_path = video_element.src;
                 const message = JSON.stringify({
-                    action: "start",
+                    action: "start_auto",
                     path: video_path,
                 });
 

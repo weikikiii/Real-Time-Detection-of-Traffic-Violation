@@ -89,17 +89,16 @@
 <!-- 側邊欄區域 -->
 <div class="sidebar">
     <h2>RT-DTV</h2>
-    <a href="/Home">Home</a>
+    <a href="/Home">首頁</a>
 
     <?php if ($authority === 2): ?>
-        <a href="/UploadController">Upload</a>
-        <a href="/RunController">Run</a>
+        <a href="/UploadController">上傳影片</a>
+        <a href="/RunController">手動偵測</a>
     <?php endif; ?>
-    <a href="/FindController">Search</a>
-    <a href="/MonitorController/only_one_screen">實時偵測系統</a>
-    <a href="/FindController/find_car_with_monitor">實時偵測系統違規照片</a>
+    <a href="/MonitorController/only_one_screen">自動偵測</a>
+    <a href="/FindController/find_car_with_monitor">搜尋違規車</a>
     <a href="/MonitorController/test">測試</a>
-    <a href="/LoginController/logout" class = "logout">Logout</a>
+    <a href="/LoginController/logout" class = "logout">登出</a>
 </div>
 
 <!-- 內容區域 -->

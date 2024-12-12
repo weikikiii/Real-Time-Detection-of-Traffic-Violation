@@ -20,80 +20,53 @@
             <source src="<?=  $videoUrl ?>" type="video/mp4">
         </video>
         </div>
+        <input type="button" name="click" value="執行程式" class="btn btn-secondary" onclick = "click_button('<?= $videoUrl ?>')" >
 
-        <!-- 我這邊是想要用submit啦 -->
-        <form action="/RunController/run_program" method="POST" id="form">
-            <input name = "video_path" value = "<?= $video_path?>" hidden>
-            <input type="submit" name="click" value="執行程式" class="btn btn-secondary"/>
-        </form>
         <div id="loadingMessage" style="display:none;">程式執行中，請稍後...</div>
         <div id="responseMessage"></div>
         <div id="result"></div>
     </div>
-<?= $this->endSection() ?>
-<!-- $('#loadingMessage').hide(); -->
-<?= $this->section('script') ?>
-    $(document).ready(function() {
-        console.log("Hello World!");
-        $('#form').on('submit', function(e) {
-            e.preventDefault(); // 防止默认表单提交
-            $('#loadingMessage').text("程式執行中，請稍後...");
-            $('#loadingMessage').show();
-            $.ajax({
-                url: '<?= base_url('/RunController/run_program') ?>',
-                method: 'POST',
-                data: $(this).serialize(), // 序列化表单数据
-                beforeSend: function() {
-                    // 還沒回傳值之前
-                    console.log("程式運行中...");
-                },
-                success: function(response) {
-                    //$('#responseMessage').html(response); // 显示返回信息
-                    var taskId = JSON.parse(response).taskId;
-                    console.log(taskId);
-                    if(taskId !== "not run"){
-                        pollResult(taskId);
-                    }
-                    else{
-                        $('#loadingMessage').text("程式已經執行過");
-                    }
-                    
-                }
-            });
-        });
-        function pollResult(taskId) {
-            $.ajax({
-                url: '<?= base_url('/RunController/check_result') ?>', // 查询结果的脚本
-                type: 'GET',
-                data: {
-                    taskId: taskId // 发送任务ID
-                },
-                success: function(result) {
-                    console.log(result);
-                    
-                    var jsonResult = JSON.parse(result);
-                    if (jsonResult.status === 'not finished') {
-                        // 如果未完成，继续轮询
-                        setTimeout(function() { pollResult(taskId); }, 5000);   // 每5秒查詢一次
-                    } else {
-                        // 显示结果
-                        //$('#result').text('程式輸出: ' + jsonResult.output);
-                        $('#loadingMessage').text("程式執行完畢");
-                        $.ajax({
-                            url: '<?= base_url('/RunController/save_violating') ?>',
-                            method: 'POST',
-                            data: {output: jsonResult.output, video_path: $('input[name="video_path"]').val()},
-                            success: function(response) {
-                                //$('#responseMessage').html(response);
-                            }
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('結果查詢失敗:', error);
-                }
-            });
-        }
-    });
 
+    <script>
+
+        //  初始化 WebSocket 連線
+        socket = new WebSocket("ws://100.78.179.98:6789");
+
+        socket.onopen = () => {
+            console.log("WebSocket 已連線");
+        };
+
+        socket.onmessage = (event) => {
+            $('#loadingMessage').text("程式執行完畢");
+            const data = JSON.parse(event.data);
+            console.log("接收到事件通知:", data);
+            $('#responseMessage').text("偵測到違規車編號 : " + data["car_id"]);
+            
+
+        };
+
+        socket.onclose = () => {
+            console.log("WebSocket 已關閉");
+        };
+
+        socket.onerror = (error) => {
+            console.error("WebSocket 錯誤:", error);
+        };
+        function click_button(video_path)
+        {
+            console.log(video_path);
+            $('#loadingMessage').text("程式執行中，請稍後...");
+            $('#responseMessage').text("");
+            $('#loadingMessage').show();
+            if (socket.readyState === WebSocket.OPEN) {
+                console.log("影片開始播放，向後端發送啟動訊號");
+                const message = JSON.stringify({
+                    action: "start",
+                    path: video_path,
+                });
+
+                socket.send(message);
+            }
+        }
+    </script>
 <?= $this->endSection() ?>
