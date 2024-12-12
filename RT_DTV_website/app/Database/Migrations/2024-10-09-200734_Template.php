@@ -170,7 +170,6 @@ class Template extends Migration
         $this->db->query("INSERT INTO violatingCars (license_plate, date, road, video_path, img_path) VALUES ('1234(測試資料)', '2023-04-11', 'A','videos/20230301_125551_0192_A.mp4','');");
         $this->db->query("INSERT INTO roads ('road_name', 'date') VALUES ('A', '2023-04-11');");
         #管理者，不需要註冊帳號
-        $this->db->query("INSERT INTO users (username, email, password, authority) VALUES ('ccc', 'ccc@gmail.com', '1234',2);");
         $this->db->query("INSERT INTO users (username, email, password, authority) VALUES ('a', 'a@gmail.com', 'a',1);");
     }
 

@@ -66,7 +66,8 @@ async def car_track(video_path, output_folder, websocket = None, auto = 1):
 
     # 參數設定
     buffer_size = 16
-    check_interval = 30                     
+    check_interval = 30
+    ip = ""                     
     #########################
 
     cap = cv2.VideoCapture(video_path)
@@ -164,7 +165,7 @@ async def car_track(video_path, output_folder, websocket = None, auto = 1):
                     # 傳送訊息給前端網頁(實時偵測系統)
                     await websocket.send(json.dumps(event_data))
                     # 傳送訊息給PHP後端(get_violation_car_data)
-                    response = requests.post("http://100.78.179.98:8080/get_violation_car_data", json = event_data)
+                    response = requests.post(os.path.join(ip,"get_violation_car_data"), json = event_data)
                 print("沒有打方向燈的車輛:", light_cars)
             else:
                 print("沒有打方向燈的車輛: none")
@@ -194,12 +195,7 @@ async def car_track(video_path, output_folder, websocket = None, auto = 1):
                     # 傳送訊息給前端網頁(實時偵測系統)
                     await websocket.send(json.dumps(event_data))
                     # 傳送訊息給PHP後端(get_violation_car_data)
-                    response = requests.post("http://100.78.179.98:8080/get_violation_car_data", json = event_data)
-                    # if response.status_code == 200:
-                    #         print("資料已成功寫入資料庫")
-                    #         print(response.text)
-                    # else:
-                    #     print(f"寫入失敗: {response.text}")
+                    response = requests.post(os.path.join(ip,"get_violation_car_data"), json = event_data)
                 print("沒有打方向燈的車輛:", light_cars)
             else:
                 print("沒有打方向燈的車輛: none")

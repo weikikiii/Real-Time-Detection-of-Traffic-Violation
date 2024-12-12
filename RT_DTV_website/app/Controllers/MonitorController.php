@@ -156,8 +156,4 @@ class MonitorController extends BaseController
             $this->save_violation_car_auto($data);
     }
 
-    public function test()
-    {
-        return view('monitors/cc');
-    }
 }
