@@ -20,7 +20,12 @@ Line64 : ip(port同public/python/website.py)
 
 
 
+
 2.啟動方法
 
 a. php spark serve --host 0.0.0.0 (開啟server)
 b. php spark websocket:start (開啟python程式)
+
+3.網頁登入的帳密
+帳號 : a
+密碼 : a
