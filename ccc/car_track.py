@@ -138,8 +138,8 @@ def car_track(video_path, output_folder, save):
             light_cars = light_predict(light_model, light_info, output_folder, filename, save)
             print("沒打方向燈的車輛:", light_cars)
             print("")
-            for key in buffer[-buffer_size:]:
-                del car_info[key]
+            ＃for key in buffer[-buffer_size:]:
+                ＃del car_info[key]
             # 移除buffer
             del buffer[-buffer_size:]
 
@@ -152,9 +152,11 @@ def car_track(video_path, output_folder, save):
             print("轉彎的車輛", turn_cars)
             light_info = {key: car_info[key] for key in turn_cars}
             light_cars = light_predict(light_model, light_info, output_folder, filename, save)
-            print("有打方向燈的車輛:", light_cars)
-            for key in buffer:
-                del car_info[key]
+            print("沒打方向燈的車輛:", light_cars)
+
+
+            ＃for key in buffer:
+                ＃del car_info[key]
             buffer.clear()
             break
 
