@@ -6,70 +6,93 @@ import torch.nn as nn
 from torchvision import datasets
 from torchvision import transforms
 from torch.utils.data.sampler import SubsetRandomSampler
-from ResNet.model import ResNet
-from ResNet.model import ResidualBlock
+
 import gc
 
-#train data:
-from ResNet.dataLoad import make_train_dataloader
-import copy
+from CNN_LSTM.CNNLSTM import *
 from tqdm import tqdm
 import pandas as pd
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
-from ResNet.dataLoad import make_test_dataloader
-from ResNet.dataLoad import make_actual_dataloader
+from CNN_LSTM.ccctry import make_test_dataloader
 
-class_names = ['left', 'right', 'straight']
+class_names = ['left', 'right', 'none']
 
-device = torch.device('cuda:0')
+
+
+# testing parameters
+
+image_shape = (3, 224, 224)
+num_classes = 3
+latent_dim =  512
+lstm_layers =  3
+hidden_dim =  1024
+bidirectional =  True
+attention = True
+
+device = torch.device('cuda:2')
 
 def predict_test_data(model, test_loader):
     model.eval()
     predictions = []
 
     with torch.no_grad():
-        for images in tqdm(test_loader, desc="Predicting"):
-            images = images.to(device)
-            outputs = model(images)
+        for image_list in tqdm(test_loader, desc="Predicting"):
+            image_list = image_list.to(device)
+            model.lstm.reset_hidden_state()
+            outputs = model(image_list)
             _, predicted = torch.max(outputs, 1)
             predictions.extend([class_names[p] for p in predicted.cpu().numpy()])
 
     return predictions
 
-def predict(test_data_path,output_path,name):
-    weight_path = "/home/ai113/code2/ResNet/weights/weight.pth"
+#car_list車輛序列、
+def CNN_LSTM_predict(car_list,output_path,carID):
+    print('kkk')
+    weight_path = "/home/ai113/code2/CNN_LSTM/weights/weight.pth"
     # load model and use weights we saved before
-    model = ResNet(ResidualBlock, [3,4,6,3])
-    model.load_state_dict(torch.load(weight_path,  map_location='cuda:0'))
+    model = CNNLSTM(
+        num_classes = num_classes,
+        latent_dim = latent_dim,
+        lstm_layers = lstm_layers,
+        hidden_dim = hidden_dim,
+        bidirectional = bidirectional,
+        attention = attention,
+    )
+    model.load_state_dict(torch.load(weight_path,  map_location='cuda:0'),False)
     model = model.to(device)
-
     # make dataloader for test data
-    test_loader = make_actual_dataloader(test_data_path)
-    predictions = predict_test_data(model, test_loader)
-    path_list = os.listdir(test_data_path)
-    path_list.sort(key=lambda x:int(x.split('.')[0]))
-    dfDict = { 
-        'file': path_list,
-        'species': predictions
-    }
-    left_car = []
-    right_car = []
-    straight_car = []
-    for key,value in zip(path_list, predictions):
-        if value == 'left':
-            left_car.append(int(key.split('.')[0]))
-        elif value == 'right':
-            right_car.append(int(key.split('.')[0]))
-        elif value == 'straight':
-            straight_car.append(int(key.split('.')[0]))
     
+    test_loader = make_test_dataloader(car_list)
+    predictions = predict_test_data(model, test_loader)
+    left = 0
+    right = 0
+    none = 0
+    for result in predictions:
+        if result == 'left':
+            left += 1
+        if result == 'right':
+            right += 1
+        if result == 'none':
+            none += 1
+    length = len(predictions)
+    dfDict = { 
+        'ID': list(range(1, length + 1)),
+        'prdict': predictions
+    }
     df = pd.DataFrame(dfDict)
-    csv_file_path = os.path.join(output_path, name+"_predictions.csv")
+    left_df = pd.DataFrame({'ID': ['left'],'prdict': [left]})
+    df = pd.concat([df, left_df], ignore_index=True, axis=0)
+    right_df = pd.DataFrame({'ID': ['right'],'prdict': [right]})
+    df = pd.concat([df, right_df], ignore_index=True, axis=0)
+    none_df = pd.DataFrame({'ID': ['none'],'prdict': [none]})
+    df = pd.concat([df, none_df], ignore_index=True, axis=0)
+    csv_file_path = os.path.join(output_path, str(carID) + "_predictions.csv")
     df.to_csv(csv_file_path, index=False)
 
     print(f"Predictions saved to {csv_file_path}")
-    return [left_car,right_car,straight_car]
+    return left, right, none
+
 
 
 def main():
@@ -78,8 +101,14 @@ def main():
     weight_path = os.path.join(base_path, "weights", "weight.pth")
 
     # load model and use weights we saved before
-    model = ResNet(ResidualBlock, [3,4,6,3])
-    model.load_state_dict(torch.load(weight_path))
+    model = CNNLSTM(
+        num_classes = num_classes,
+        latent_dim = latent_dim,
+        lstm_layers = lstm_layers,
+        hidden_dim = hidden_dim,
+        bidirectional = bidirectional,
+        attention = attention,
+    )
     model = model.to(device)
 
     # make dataloader for test data
