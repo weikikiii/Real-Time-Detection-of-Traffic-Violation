@@ -80,7 +80,6 @@
 
 
 ## 系統流程
-1. **系統流程**:
 ![image](https://github.com/candycca/Real-Time-Detection-of-Traffic-Violation/blob/ccc/docs/系統架構.png)
 
 
@@ -89,9 +88,10 @@
   標記車輛車燈每幀的亮暗的工具，並輸出標記結果(csv檔)  
 2. **操作方式**:
    - 執行標記工具程式
-   ```bash
-     python label_light.py
-   ```
+  
+     ```bash
+       python label_light.py
+     ```
    - 選擇車燈資料夾並開始標記
   
      
