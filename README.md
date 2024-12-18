@@ -10,7 +10,7 @@
 - **伺服器環境**: PHP server with Port Forward (端口轉發)
 - **程式語言**: 
   - PHP 
-  - Python (使用 Anaconda 管理環境)
+  - Python
 - **資料庫**: SQLite3
 
 
@@ -29,9 +29,10 @@
     - pillow == 10.4.0 
     - matplotlib == 3.7.5
     - tqdm == 4.66.5
+    - websockets == 13.1
 
 
-## 訓練與測試(編輯中
+## 訓練與測試
 
 ### 訓練模型
 1. 執行訓練指令：
@@ -91,58 +92,38 @@
 ## 文件結構(編輯中
 
 ```bash
-|-- my_project/
+|-- Real-Time-Detection-of-Traffic-Violation/
     |-- turn_model_train/  # 轉彎模型訓練 
     |-- light_model_train/ # 車燈模型訓練
     |-- main/              # 系統主程式
         |--weight/
-           |--yolov8n.pt   
-           |--weight.pth   # ResNet34
-           |--best.pt
+           |--yolov8n.pt   # 車輛追蹤
+           |--turn.pth     # 轉彎判斷
+           |--light.pt     # 車燈判斷
         |--screenshot.py
-        |--ccc.py
+        |--main.py
         |--car_track.py    # 車輛偵測
         |--turn.py         # 轉彎判斷
         |--turn_model.py   # 轉彎模型
-        |--light.py        # 違規判斷
+        |--light.py        # 車燈判斷
         |--screenshot.py   # 產生違規照片
     |-- RT_DTV_website     # PHP website
-        |-- app/               # PHP app
-        |-- database/          # SQLite3 資料庫
-        |-- public/            # 前端文件
-            |-- style.css      # 前端樣式
-        |-- scripts/           # 訓練與測試的 Python 腳本
-            |-- train_model.py(要改)
-            |-- test_model.py(要改)
-    |-- output/            # 存放所有結果
+        |-- app/                 # PHP app
+        |-- database/            # SQLite3 資料庫
+        |-- public/              # 前端文件
+            |-- style.css        # 前端樣式
+        |-- scripts/             # 訓練與測試的 Python 腳本
+            |-- main_website.py  # 網站自動化偵測違規
+    |-- output/                             # 存放所有結果
         |-- demo_video/
-            |-- video1/
-                |-- video1_output.webm  # yolo output 
-                |-- carimg/             # 儲存車輛序列圖
-                    |-- car1/
-                        |-- car1_5.jpg     # car1起始幀
-                        |-- car1_6.jpg
-                        ...
-                        |-- car1_91.jpg    # car1最終幀
-                    |-- car4/
-                        |-- car4_1.jpg
-                        |-- car4_2.jpg
-                        ...
-                        |-- car4_100.jpg
-                    ...
-                |-- turn_info/          # 儲存車輛軌跡圖以及轉彎模型預測結果
-                    |-- track1.jpg         # car1的車輛軌跡圖
-                    |-- track4.jpg         # car4的車輛軌跡圖
-                    ...
-                    |-- turn_predict.csv   # 轉彎模型預測結果
-                |-- light_info/         # 儲存亮暗波型圖以及違規模型預測結果
-                    |-- wave1.jpg          # car1的亮暗波型圖
-                    |-- wave4.jpg          # car4的亮暗波型圖
-                    ...
-                    |-- light_predict.csv  # 違規模型預測結果
-                |-- violation/          # 儲存違規照片
-                    |-- car1.jpg
-                    ...
+            |-- video/
+                |-- video_output.webm       # yolo bounding box video
+                |-- carimg/                 # 儲存車輛序列圖
+                |-- turn_info/              # 儲存車輛軌跡圖以及轉彎模型預測結果
+                    |-- turn_predict.csv    # 轉彎模型預測結果
+                |-- light_info/             # 儲存亮暗波型圖以及違規模型預測結果
+                    |-- light_predict.csv   # 違規模型預測結果
+                |-- violation/              # 儲存違規照片
     |-- light_label_tool   # 車燈標記工具 
     |-- README.md          # 專案說明文件
 
