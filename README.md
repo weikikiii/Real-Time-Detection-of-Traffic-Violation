@@ -86,10 +86,14 @@
 
 ## 車燈標記工具
 1. **用途**:
+  標記車輛車燈每幀的亮暗的工具，並輸出標記結果  
 2. **操作方式**:
-
-
-## 文件結構(編輯中
+   - 執行標記工具程式
+   ```bash
+     python label_light.py
+   ```
+   - 選擇車燈資料夾並開始標記
+## 文件結構
 
 ```bash
 |-- Real-Time-Detection-of-Traffic-Violation/
