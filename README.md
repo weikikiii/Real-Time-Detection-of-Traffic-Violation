@@ -100,7 +100,7 @@
 ```bash
 |-- Real-Time-Detection-of-Traffic-Violation/
     |-- turn_model_train/  # 轉彎模型訓練 
-    |-- light_model_train/ # 車燈模型訓練
+    |-- light_model_train/ # 車燈模型訓練    
     |-- main/              # 系統主程式
         |--weight/
            |--yolov8n.pt   # 車輛追蹤
@@ -113,7 +113,11 @@
         |--turn_model.py   # 轉彎模型
         |--light.py        # 車燈判斷
         |--screenshot.py   # 產生違規照片
-    |-- RT_DTV_website     # PHP website
+    |-- light_model_component    # 車燈模型組件
+        |-- CNNLSTM/             
+        |-- SegNet/
+        |-- transformor/    
+    |-- RT_DTV_website           # PHP website
         |-- app/                 # PHP app
         |-- database/            # SQLite3 資料庫
         |-- public/              # 前端文件
