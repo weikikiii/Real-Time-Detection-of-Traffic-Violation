@@ -41,7 +41,6 @@ def merge_picture(imgs):
     result = cv2.hconcat([top, bottom])
     return result
 
-#儲存合併後的圖片至/home/ai113/code2/result/v?/
 def save_img(violation_image, car_id, output_folder):
     output_path = os.path.join(output_folder, "car"+str(car_id)+".jpg")
     cv2.imwrite(output_path, violation_image)
@@ -60,7 +59,7 @@ def big_img(img, x, y, w, h, imgx, imgy):
     x2 = int(x + h)
     y2 = int(y + w)
     #print(x, x1, x2, y, y1, y2)
-    #檢查邊界()
+    #檢查邊界
     '''
     if x1 < 0:
         print('x1 out of range in big img')
@@ -95,6 +94,7 @@ def make_violation_image(four_imgs, four_bboxs, car_id, license_plate, output_fo
     #放大第四張圖片
     img4_x, img4_y, img4_channels = fourth_img.shape
     big_fourth_img = big_img(fourth_img, x, y, w, h, img4_x, img4_y)
+    # 這邊表示圖片放大失敗
     if not np.any(big_fourth_img):
         big_fourth_img = imgs[0]
         #big_fourth_img = draw_text(big_fourth_img, 'List is empty')

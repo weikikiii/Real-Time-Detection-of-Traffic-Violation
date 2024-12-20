@@ -16,11 +16,11 @@ model = YOLO(os.path.join(weight, "yolov8n.pt"))
 model.to('cuda')
 
 turn_model = ResNet(ResidualBlock, [3,4,6,3])
-turn_model.load_state_dict(torch.load(os.path.join(weight, "weight.pth"), map_location='cuda:0'))
+turn_model.load_state_dict(torch.load(os.path.join(weight, "turn.pth"), map_location='cuda:0'))
 turn_model = turn_model.to('cuda')
 
 
-light_model = YOLO(os.path.join(weight, "best.pt"))
+light_model = YOLO(os.path.join(weight, "light.pt"))
 light_model = light_model.to('cuda')
 
 

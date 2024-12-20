@@ -21,7 +21,7 @@
     </select><br><br>
 
     <div class = "only-one-video-container" >
-        <video name = "test" class = "video" type="video/mp4" autoplay muted></video>
+        <video class = "video" type="video/mp4" autoplay muted></video>
         <div class = "red-dot"></div>
     </div>
     <h3 hidden id = "show_violation_car" style = "color: red">違規車ID:<h3><h3 id = "detect_result"></h3>
@@ -33,9 +33,6 @@
         const road_select = document.getElementById('roadSelect');
         const show_violation_car = document.getElementById('show_violation_car');
 
-        let current = 0;
-        let road_name = video_element.getAttribute('name');
-        let lengths = videos[road_name].length;
 
         // console.log(videos);
         // console.log(video_element);

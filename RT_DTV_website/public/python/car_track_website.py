@@ -18,32 +18,21 @@ model = YOLO(os.path.join(weight_path, "yolov8n.pt"))
 model.to('cuda')
 
 turn_model = ResNet(ResidualBlock, [3,4,6,3])
-turn_model.load_state_dict(torch.load(os.path.join(weight_path, "weight.pth"), map_location='cuda:0'))
+turn_model.load_state_dict(torch.load(os.path.join(weight_path, "turn.pth"), map_location='cuda:0'))
 turn_model = turn_model.to('cuda')
 
 
-light_model = YOLO(os.path.join(weight_path, "best.pt"))
+light_model = YOLO(os.path.join(weight_path, "light.pt"))
 light_model = light_model.to('cuda')
 
 
-
-# input:
-#1.input_folder_path:存放你想預測的影片的資料夾路徑，裡面不能有子資料夾！
-#2.car_img_folder_path:存放車輛序列照片的資料夾之path
-#3.box_info_folder_path:存放bounding_box資料的資料夾
-# output:
-#1.各video的{yolo預測結果}會以(video_name)_ouput.mp4存在code2資料夾下，我本來想把他們用程式統一到某個資料夾，但失敗，所以我現在把所有的output_video放在code2/video_output底下
-#2.{每部影片每個id出現的幀數及其在該幀數的bounding box之中心座標以及box長寬}以txt檔存在box_info_folder_path下
-#3.{每部影片所有車輛序列照片}存在car_img_folder_path資料夾底下，例如你要找v25中id為215的車的照片，可以在{car_img_folder_path}/v25/car215中找到
-
-# img_list = Yolo_Car_Predict(car_model, filename, video_path, info_folder, output_folder, cut_with_outside)
 
 async def car_track(video_path, output_folder, websocket = None, auto = 1):
 
 
 
     ##################################
-    filename = video_path.split('\\')[-1][:-4]
+    filename = os.path.basename(video_path)[:-4]
     print(filename)
     car_info = defaultdict(dict)
     buffer = []
