@@ -77,7 +77,7 @@ def draw(track_info, output_folder, save):
 
 class_names = ['left', 'right', 'straight'] 
 
-def turn_predict(model, track_info, output_folder, filename, save):
+def turn_predict(model, track_info, output_folder, filename, save, turn):
     turn_car = []
     results = []
     car_id, track_imgs = draw(track_info, output_folder, save)
@@ -92,8 +92,13 @@ def turn_predict(model, track_info, output_folder, filename, save):
                 outputs = model(images)
                 _, predicted = torch.max(outputs, 1)
                 results.extend([class_names[p] for p in predicted.cpu().numpy()])
-        for turn, id in zip(results, car_id):           
-            if turn == 'left' or turn == 'right':
+        
+        for label, id in zip(results, car_id): 
+            if turn == 'n' and label in ['left', 'right']:     
+                turn_car.append(id)
+            if turn == 'l' and label == 'left':
+                turn_car.append(id)
+            if turn == 'r' and label == 'right':
                 turn_car.append(id)
         save_turn_info(results, car_id, output_folder, filename, save[2]) #存turn_info的車輛轉彎方向csv檔(記錄車輛是直走、右轉還是左轉） 
         return turn_car
