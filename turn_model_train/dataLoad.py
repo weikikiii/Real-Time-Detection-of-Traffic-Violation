@@ -61,23 +61,4 @@ def load_test_data(data_path, transform=None):
 
 
 
-def make_actual_dataloader(data_path):
-
-    testData = torch.stack(laod_actual_data(data_path,transform=test_transforms)) # For converting list to tensor
-    # testData = transform(testData)
-    test_loader = torch.utils.data.DataLoader(dataset=testData, batch_size=4)
-    return test_loader
-
-def laod_actual_data(data_path, transform =None):
-    images = []
-    path_list = os.listdir(data_path)
-    path_list.sort(key=lambda x:int(x.split('.')[0]))
-
-    for file_name in path_list:
-        img_path = os.path.join(data_path, file_name)
-        img = Image.open(img_path).convert('RGB')
-        if transform:
-            img = transform(img)
-        images.append(img)
-    return images
 

@@ -60,7 +60,7 @@ def big_img(img, x, y, w, h, imgx, imgy):
     x2 = int(x + h)
     y2 = int(y + w)
     #print(x, x1, x2, y, y1, y2)
-    #檢查邊界(還沒做)
+    #檢查邊界()
     '''
     if x1 < 0:
         print('x1 out of range in big img')
@@ -97,7 +97,7 @@ def make_violation_image(four_imgs, four_bboxs, car_id, license_plate, output_fo
     big_fourth_img = big_img(fourth_img, x, y, w, h, img4_x, img4_y)
     if not np.any(big_fourth_img):
         big_fourth_img = imgs[0]
-        big_fourth_img = draw_text(big_fourth_img, 'List is empty')
+        #big_fourth_img = draw_text(big_fourth_img, 'List is empty')
         print("List is empty")
     else:
         big_fourth_img = cv2.resize(big_fourth_img, (img4_y,img4_x), interpolation= cv2.INTER_LINEAR)

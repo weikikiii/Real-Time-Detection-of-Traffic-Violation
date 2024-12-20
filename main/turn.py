@@ -1,10 +1,43 @@
 import cv2 as cv
 import numpy as np
 import torch
+import os
+import csv
 from tqdm import tqdm
 from turn_model import make_test_dataloader
+#存car_img
+def save_carimg(frame_info, id, output_folder, save):
+    if save:
+        for frame, info in frame_info.items():
+            img = info["car_imgs"]
+            carimg_folder_path = os.path.join(output_folder , 'carimg', f"{id}")
+            os.makedirs(carimg_folder_path, exist_ok=True)
+            carimg_path = os.path.join(carimg_folder_path, f"car{id}_{frame}.jpg")
+            cv.imwrite(carimg_path, img)
+            
+#存turn_info的軌跡圖片
+def save_trackimg(img, id, output_folder, save):
+    if save:
+        #格式：./"args.name"_output/turn_info/"filename"/track_"id".jpg
+        turn_info_folder_path = os.path.join(output_folder , 'turn_info')
+        track_img_path = os.path.join(turn_info_folder_path, f"track_{id}.jpg")
+        cv.imwrite(track_img_path, img)
+        
+#存turn_info的車輛轉彎方向csv檔(記錄車輛是直走、右轉還是左轉）       
+def save_turn_info(results, car_id, output_folder, filename, save):
+    if save:
+        turn_info_folder_path = os.path.join(output_folder , 'turn_info')
+        csv_path = os.path.join(turn_info_folder_path, "turn_predict.csv")
+        with open(csv_path, mode='a', newline='') as csvfile:
+            df = csv.writer(csvfile)
+            if os.stat(csv_path).st_size == 0:  # 檢查檔案是否為空
+                df.writerow(['video_name', 'car_id', 'predict_turn'])
+            for turn, id in zip(results, car_id):
+                df.writerow([filename, id, turn])
+        
 
-def draw(track_info, save):      
+#畫軌跡
+def draw(track_info, output_folder, save):      
     car_id= []
     imgs = []
     
@@ -29,10 +62,14 @@ def draw(track_info, save):
                 cv.polylines(img, [points], isClosed=False, color=(255, 255, 255), thickness=1)
                 cv.circle(img, (points[0][0][0], points[0][0][1]), 1, (255,0,0))
                 cv.circle(img, (points[-1][0][0], points[-1][0][1]), 1, (0,255,0))
-                if save:
-                    cv.imwrite('C:\\CCCProject\\ccc\\' + str(id) + '.jpg', img)
                 car_id.append(id)
                 imgs.append(img)
+                #存turn_info的軌跡圖片
+                save_trackimg(img, id, output_folder, save[2])
+                #存car_img
+                save_carimg(frame_info, id, output_folder, save[1])
+                
+                
         else:
             continue 
     return car_id, imgs
@@ -40,24 +77,31 @@ def draw(track_info, save):
 
 class_names = ['left', 'right', 'straight'] 
 
-def turn_predict(model, track_info, save = 0):
+def turn_predict(model, track_info, output_folder, filename, save, turn):
     turn_car = []
-    # 存轉彎結果，還沒寫
     results = []
-    car_id, track_imgs = draw(track_info, save)
-    test_loader = make_test_dataloader(track_imgs)
-    with torch.no_grad():
-        for images in tqdm(test_loader, desc="Predicting", disable=True):
-            images = images.to("cuda:0")
-            outputs = model(images)
-            _, predicted = torch.max(outputs, 1)
-            results.extend([class_names[p] for p in predicted.cpu().numpy()])
-    for turn, id in zip(results, car_id):
-        if turn == 'left' or turn == 'right':
-            turn_car.append(id)
-    return turn_car
-
-
+    car_id, track_imgs = draw(track_info, output_folder, save)
+    if not car_id:
+        return turn_car
+    else:
+        test_loader = make_test_dataloader(track_imgs)
+        model.eval()
+        with torch.no_grad():
+            for images in tqdm(test_loader, desc="Predicting", disable=True):
+                images = images.to("cuda:0")
+                outputs = model(images)
+                _, predicted = torch.max(outputs, 1)
+                results.extend([class_names[p] for p in predicted.cpu().numpy()])
+        
+        for label, id in zip(results, car_id): 
+            if turn == 'n' and label in ['left', 'right']:     
+                turn_car.append(id)
+            if turn == 'l' and label == 'left':
+                turn_car.append(id)
+            if turn == 'r' and label == 'right':
+                turn_car.append(id)
+        save_turn_info(results, car_id, output_folder, filename, save[2]) #存turn_info的車輛轉彎方向csv檔(記錄車輛是直走、右轉還是左轉） 
+        return turn_car
 
 
 
