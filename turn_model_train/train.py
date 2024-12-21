@@ -27,7 +27,7 @@ learning_rate = 0.01
 # data path and weight path
 base_path = os.path.dirname(os.path.abspath(__file__))
 train_data_path = os.path.join(base_path, "data", "train")
-weight_path = os.path.join(base_path, "weights", "weight.pth")
+weight_path = os.path.join(base_path, "weights", "turn.pth")
 
 # make dataloader for train data
 train_loader, valid_loader = make_train_dataloader(train_data_path)

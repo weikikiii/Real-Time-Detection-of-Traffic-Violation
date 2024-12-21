@@ -40,7 +40,7 @@ def predict_test_data(model, test_loader):
 def main():
     base_path = os.path.dirname(os.path.abspath(__file__))
     test_data_path = os.path.join(base_path, "data", "test")
-    weight_path = os.path.join(base_path, "weights", "weight.pth")
+    weight_path = os.path.join(base_path, "weights", "turn.pth")
 
     # load model and use weights we saved before
     model = ResNet(ResidualBlock, [3,4,6,3])
