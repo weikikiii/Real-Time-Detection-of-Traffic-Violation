@@ -72,7 +72,7 @@
      
 
 ## 功能說明
-1. **light_model_method--SegNet**
+1. **light_model_method--SegNet:**
    - 輸入：車輛照片
    - 輸出：車燈遮罩
   
