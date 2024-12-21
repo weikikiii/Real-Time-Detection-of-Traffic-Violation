@@ -40,10 +40,16 @@
       ```bash
       python ResNet_train/train.py
       ```
-    - 車燈辨識模型
-      ```bash
-      python CNNLSTM_train/train.py
-      ```
+    - 車燈模型組件
+      - SegNet
+        ```bash
+        python SegNet/train.py
+        ```
+
+      - CNNLSTM
+        ```bash
+        python CNNLSTM/train.py
+        ```
     
 
 ### 測試模型
@@ -52,18 +58,26 @@
       ```bash
       python ResNet_train/test.py
       ```
-   - 車燈辨識模型
-      ```bash
-      python CNNLSTM_train/test.py
-      ```
+   - 車燈模型組件
+      - SegNet
+        ```bash
+        python SegNet/test.py 
+        ```
+
+      - CNNLSTM
+        ```bash
+        python CNNLSTM/test.py
+        ```
    - 系統主程式
       ```bash
-      python ccc.py --name filefolder  --save 
+      python ccc.py --name filefolder  --save 0/1,0/1,0/1,0/1  --turn r/l/n
       ```
       filefolder：測試影片的資料夾
-
+     
 
 ## 功能說明
+1. **車燈模型組件**：
+   - SegNet
 1. **系統主程式：輸入車輛影片，檢測該影片中車輛是否有違規行為。**
    - 輸入：車輛影片資料
    - 輸出：違規車輛的照片以及相關資訊
