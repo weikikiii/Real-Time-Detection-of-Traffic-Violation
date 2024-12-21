@@ -40,16 +40,15 @@
       ```bash
       python ResNet_train/train.py
       ```
-    - 車燈模型組件
-      - SegNet
-        ```bash
-        python SegNet/train.py
-        ```
+    - light_model_method--SegNet
+      ```bash
+      python SegNet/train.py
+      ```
 
-      - CNNLSTM
-        ```bash
-        python CNNLSTM/train.py
-        ```
+    - light_model_method--CNNLSTM
+      ```bash
+      python CNNLSTM/train.py
+      ```
     
 
 ### 測試模型
@@ -58,29 +57,27 @@
       ```bash
       python ResNet_train/test.py
       ```
-   - 車燈模型組件--SegNet
-      ```bash
-      python SegNet/test.py 
-      ```
-   - 車燈模型組件--CNNLSTM
-      ```bash
-      python CNNLSTM/test.py
-      ```
    - 系統主程式
       ```bash
       python ccc.py --name filefolder  --save 0/1,0/1,0/1,0/1  --turn r/l/n
       ```
       filefolder：測試影片的資料夾
      
+   - light_model_method--SegNet
+   ```bash
+   python SegNet/test.py 
+   ```
+     
+     
 
 ## 功能說明
-1. **車燈模型組件--SegNet:產生車燈遮罩**
+1. **light_model_method--SegNet**
    - 輸入：車輛照片
-   - 輸出：有車燈遮罩的遮輛照片
+   - 輸出：車燈遮罩
   
-1. **車燈模型組件--CNNLSTM:**
+1. **light_model_method--CNNLSTM:**
    - 輸入：車輛序列
-   - 輸出：有車燈遮罩的遮輛照片
+   - 輸出：是否違規
      
 2. **系統主程式：輸入車輛影片，檢測該影片中車輛是否有違規行為。**
    - 輸入：車輛影片資料
@@ -117,8 +114,9 @@
 
 ```bash
 |-- Real-Time-Detection-of-Traffic-Violation/
-    |-- turn_model_train/  # 轉彎模型訓練 
-    |-- light_model_train/ # 車燈模型訓練    
+    |-- turn_model_train/  # 轉彎模型訓練    
+    |-- light_model_train/ # 車燈模型訓練
+        |--train.py  
     |-- main/              # 系統主程式
         |--weight/
            |--yolov8n.pt   # 車輛追蹤
@@ -131,10 +129,9 @@
         |--turn_model.py   # 轉彎模型
         |--light.py        # 車燈判斷
         |--screenshot.py   # 產生違規照片
-    |-- light_model_component    # 車燈模型組件
+    |-- light_model_method    # 車燈模型改善方法
         |-- CNNLSTM/             
-        |-- SegNet/
-        |-- transformor/    
+        |-- SegNet/ 
     |-- RT_DTV_website           # PHP website
         |-- app/                 # PHP app
         |-- database/            # SQLite3 資料庫
