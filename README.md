@@ -61,11 +61,10 @@
       ```bash
       python ccc.py --name filefolder  --save 0/1,0/1,0/1,0/1  --turn r/l/n
       ```
-      filefolder：測試影片的資料夾
-     
+      filefolder：測試影片的資料夾    
    - light_model_method--SegNet
    ```bash
-   python SegNet/test.py 
+   python SegNet/test.py --SAMPLE
    ```
      
      
