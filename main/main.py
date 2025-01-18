@@ -1,8 +1,8 @@
 from ultralytics import YOLO
 import os
 import time
-import pandas as pd
-import argparse
+import pandas as pd    #用來處理資料用的套件
+import argparse        #處理命令列參數用
 from car_track import car_track
 
 def make_sub_dir(output_folder, save_paths):
@@ -20,7 +20,7 @@ def make_sub_dir(output_folder, save_paths):
     if os.path.exists(light_csv_path):
         os.remove(light_csv_path)
 
-def parse_save(value):
+def parse_save(value):    #驗證引數是否符合格式要求
     try:
         numbers = [int(x) for x in value.split(",")]
         # 檢查長度是否為 4
