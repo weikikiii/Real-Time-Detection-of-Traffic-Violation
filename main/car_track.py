@@ -10,14 +10,14 @@ from light import light_predict
 from turn_model import *
 
 current_dir = os.path.dirname((os.path.abspath(__file__)))
-weight = os.path.join(current_dir, "weight")
+weight = os.path.join(current_dir, "weight")    #權重檔案是用來儲存訓練好的參數
 
-model = YOLO(os.path.join(weight, "yolov8n.pt"))
-model.to('cuda')
+model = YOLO(os.path.join(weight, "yolov8n.pt"))    #改用最新版v11
+model.to('cuda')    #將模型移至GPU上做使用
 
-turn_model = ResNet(ResidualBlock, [3,4,6,3])
-turn_model.load_state_dict(torch.load(os.path.join(weight, "turn.pth"), map_location='cuda:0'))
-turn_model = turn_model.to('cuda')
+turn_model = ResNet(ResidualBlock, [3,4,6,3])    #模型初始化
+turn_model.load_state_dict(torch.load(os.path.join(weight, "turn.pth"), map_location='cuda:0'))    #把權重檔案load進模型
+turn_model = turn_model.to('cuda')    #把模型移動到GPU上
 
 
 light_model = YOLO(os.path.join(weight, "light.pt"))
@@ -53,7 +53,7 @@ def car_track(video_path, output_folder, save, turn):
     check_interval = 30                     
     #########################
 
-    cap = cv2.VideoCapture(video_path)
+    cap = cv2.VideoCapture(video_path)    #用openCV打開影片
     if not cap.isOpened():
         print(f"Error reading video file: {video_path}")
         return
