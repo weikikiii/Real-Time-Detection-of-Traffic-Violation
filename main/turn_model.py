@@ -5,7 +5,7 @@ import cv2 as cv
 from torchvision import transforms
 
 
-class ResidualBlock(nn.Module):
+class ResidualBlock(nn.Module):    #初始化殘差塊
     def __init__(self, in_channels, out_channels, stride = 1, downsample = None):
         super(ResidualBlock, self).__init__()#呼叫父類別的constructor
         #兩個捲積層(3*3,padding = 1)，第二層的stride = 1
@@ -16,11 +16,11 @@ class ResidualBlock(nn.Module):
         self.conv2 = nn.Sequential(
                         nn.Conv2d(out_channels, out_channels, kernel_size = 3, stride = 1, padding = 1),
                         nn.BatchNorm2d(out_channels))
-        self.downsample = downsample
-        self.relu = nn.ReLU()
+        self.downsample = downsample    #如果殘差塊的輸入和輸出的形狀不一致（例如尺寸或通道數不同），則需要使用下採樣層來匹配。
+        self.relu = nn.ReLU()    #用來在殘差塊的結尾處啟動函數
         self.out_channels = out_channels
         
-    def forward(self, x):
+    def forward(self, x):    #殘差塊地計算流程
         residual = x
         out = self.conv1(x)
         out = self.conv2(out)
