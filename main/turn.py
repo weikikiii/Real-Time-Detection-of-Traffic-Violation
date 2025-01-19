@@ -8,7 +8,7 @@ from turn_model import make_test_dataloader
 #存car_img
 def save_carimg(frame_info, id, output_folder, save):
     if save:
-        for frame, info in frame_info.items():
+        for frame, info in frame_info.items():    
             img = info["car_imgs"]
             carimg_folder_path = os.path.join(output_folder , 'carimg', f"{id}")
             os.makedirs(carimg_folder_path, exist_ok=True)
@@ -41,7 +41,7 @@ def draw(track_info, output_folder, save):
     car_id= []
     imgs = []
     
-    for id, frame_info in track_info.items():
+    for id, frame_info in track_info.items():    #遍歷追蹤資料
         points = []
         start_coor = frame_info[list(frame_info.keys())[0]]['bboxes']
         end_coor = frame_info[list(frame_info.keys())[-1]]['bboxes']
@@ -55,11 +55,11 @@ def draw(track_info, output_folder, save):
         x2 = int(end_coor[0])
         y2 = int(end_coor[1])
         dis = (y2 - y1)**2 + (x2 - x1)**2 
-        if frame_num > 35 and (y2 - y1) < 0 and dis > 10000:
+        if frame_num > 35 and (y2 - y1) < 0 and dis > 10000:    #篩選條件為幀數超過35且向上移動且距離超過10000(像素平方)
                 img = np.zeros((540,960,3), np.uint8)
                 points = np.array(points)
                 points = points.astype(np.int32).reshape((-1, 1, 2))
-                cv.polylines(img, [points], isClosed=False, color=(255, 255, 255), thickness=1)
+                cv.polylines(img, [points], isClosed=False, color=(255, 255, 255), thickness=1)    #繪圖
                 cv.circle(img, (points[0][0][0], points[0][0][1]), 1, (255,0,0))
                 cv.circle(img, (points[-1][0][0], points[-1][0][1]), 1, (0,255,0))
                 car_id.append(id)
@@ -89,8 +89,8 @@ def turn_predict(model, track_info, output_folder, filename, save, turn):
         with torch.no_grad():
             for images in tqdm(test_loader, desc="Predicting", disable=True):
                 images = images.to("cuda:0")
-                outputs = model(images)
-                _, predicted = torch.max(outputs, 1)
+                outputs = model(images)    #把圖片丟進模型
+                _, predicted = torch.max(outputs, 1)    #加上分數最高的類別標籤
                 results.extend([class_names[p] for p in predicted.cpu().numpy()])
         
         for label, id in zip(results, car_id): 
